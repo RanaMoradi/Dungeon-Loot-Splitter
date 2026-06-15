@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="Rana Moradi">
+    <meta name="description" content="Dungeon Loot Splitter - Split loot evenly among your party members.">
+    <title>Dungeon Loot Splitter</title>
+    <link rel="stylesheet" href="css/style.css">
+  </head>
+  <body>
+
+    <header>
+      <h1>Dungeon Loot Splitter</h1>
+    </header>
+
+    <main>
+
+      <!-- Second Row Left: Party Setup -->
+      <section class="panel" id="party-setup-panel">
+        <h2>Party Setup</h2>
+        <label for="party-size">Number of Party Members:</label>
+        <input type="number" id="party-size" min="1" placeholder="Enter party size">
+        <p id="party-error" class="error-msg"></p>
+      </section>
+
+      <!-- Second Row Right: Add Loot -->
+      <section class="panel" id="add-loot-panel">
+        <h2>Add Loot</h2>
+        <label for="loot-name">Loot Name:</label>
+        <input type="text" id="loot-name" placeholder="e.g. Golden Sword">
+
+        <label for="loot-value">Loot Value:</label>
+        <input type="number" id="loot-value" min="0" step="0.01" placeholder="e.g. 150.00">
+
+        <p id="loot-error" class="error-msg"></p>
+        <button type="button" id="add-loot-btn">Add Loot</button>
+      </section>
+
+      <!-- Third Row Left: Loot List -->
+      <section class="panel" id="loot-list-panel">
+        <h2>Loot List</h2>
+        <ul id="loot-list">
+          <li class="empty-msg">No loot added yet.</li>
+        </ul>
+        <p id="running-total">Total Loot: $0.00</p>
+      </section>
+
+      <!-- Third Row Right: Split Loot -->
+      <section class="panel" id="split-loot-panel">
+        <h2>Split Loot</h2>
+        <button type="button" id="split-loot-btn">Split Loot</button>
+        <div id="split-results">
+          <p id="split-error" class="error-msg"></p>
+          <p id="total-loot-display"></p>
+          <p id="per-member-display"></p>
+        </div>
+      </section>
+
+      <!-- Bottom Row: Logic Explanation -->
+      <section class="panel reflection" id="logic-panel">
+        <h2>Logic Explanation</h2>
+        <p>
+          The app uses a single array called <strong>lootItems</strong> declared at the top of script.js,
+          outside all functions, so it persists across button clicks throughout the session.
+          Each time the user clicks "Add Loot," the <strong>addLoot()</strong> function runs validation
+          checks using if statements: it checks that the loot name is not empty, that the loot value
+          is a valid number, and that it is not negative. If validation passes, a new object with
+          a <strong>name</strong> and <strong>value</strong> property is pushed into the array.
+        </p>
+        <p>
+          After each addition, <strong>renderLoot()</strong> uses a traditional <strong>for loop</strong>
+          to iterate through the lootItems array, building the loot list in the DOM item by item,
+          and accumulating a running total as it goes. This total updates live after each item is added.
+        </p>
+        <p>
+          When the user clicks "Split Loot," the <strong>splitLoot()</strong> function first validates
+          that the party size is 1 or greater and that there is at least one loot item in the array.
+          If those conditions are met, it divides the total loot by the party size and displays
+          both the total and the per-member share, formatted to two decimal places using
+          <strong>toFixed(2)</strong>.
+        </p>
+      </section>
+
+    </main>
+
+    <script src="js/script.js"></script>
+
+  </body>
+</html>
