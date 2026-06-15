@@ -61,24 +61,25 @@
       <section class="panel reflection" id="logic-panel">
         <h2>Logic Explanation</h2>
         <p>
-          The app uses a single array called <strong>lootItems</strong> declared at the top of script.js,
-          outside all functions, so it persists across button clicks throughout the session.
-          Each time the user clicks "Add Loot," the <strong>addLoot()</strong> function runs validation
-          checks using if statements: it checks that the loot name is not empty, that the loot value
-          is a valid number, and that it is not negative. If validation passes, a new object with
-          a <strong>name</strong> and <strong>value</strong> property is pushed into the array.
+          In this app, I used an array called lootItems to store all the loot
+          that gets added during the game. I declared it at the top of my script.js
+          file, outside of any functions, so that it doesn't reset every time a
+          button is clicked.
         </p>
         <p>
-          After each addition, <strong>renderLoot()</strong> uses a traditional <strong>for loop</strong>
-          to iterate through the lootItems array, building the loot list in the DOM item by item,
-          and accumulating a running total as it goes. This total updates live after each item is added.
+          When the user clicks Add Loot, my addLoot() function checks that the
+          name isn't empty and that the value is a real number and not negative.
+          If everything looks good, it creates an object with a name and value
+          and pushes it into the array. Then renderLoot() runs a for loop to
+          go through the whole array and display each item on the page, adding
+          up the total as it goes.
         </p>
         <p>
-          When the user clicks "Split Loot," the <strong>splitLoot()</strong> function first validates
-          that the party size is 1 or greater and that there is at least one loot item in the array.
-          If those conditions are met, it divides the total loot by the party size and displays
-          both the total and the per-member share, formatted to two decimal places using
-          <strong>toFixed(2)</strong>.
+          When the user clicks Split Loot, my splitLoot() function checks that
+          a party size was entered and that there is actually loot in the array.
+          If both are true, it loops through the array again to get the total,
+          then divides it by the number of party members and shows both the
+          total and each member's share on the page.
         </p>
       </section>
 
