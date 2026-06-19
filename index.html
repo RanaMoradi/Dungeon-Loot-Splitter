@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="author" content="Rana Moradi">
-    <meta name="description" content="Dungeon Loot Splitter - Split loot evenly among your party members.">
+    <meta name="description" content="Dungeon Loot Splitter Phase 2 - a reactive, state-driven loot splitting application.">
     <title>Dungeon Loot Splitter</title>
     <link rel="stylesheet" href="css/style.css">
   </head>
@@ -16,70 +16,95 @@
 
     <main>
 
-      <!-- Second Row Left: Party Setup -->
+      <!-- Party Setup -->
       <section class="panel" id="party-setup-panel">
         <h2>Party Setup</h2>
         <label for="party-size">Number of Party Members:</label>
-        <input type="number" id="party-size" min="1" placeholder="Enter party size">
+        <input type="number" id="party-size" min="1" step="1" placeholder="Enter party size">
         <p id="party-error" class="error-msg"></p>
       </section>
 
-      <!-- Second Row Right: Add Loot -->
+      <!-- Add Loot -->
       <section class="panel" id="add-loot-panel">
         <h2>Add Loot</h2>
-        <label for="loot-name">Loot Name:</label>
-        <input type="text" id="loot-name" placeholder="e.g. Golden Sword">
 
-        <label for="loot-value">Loot Value:</label>
-        <input type="number" id="loot-value" min="0" step="0.01" placeholder="e.g. 150.00">
+        <div class="field-group">
+          <label for="loot-name">Loot Name:</label>
+          <input type="text" id="loot-name" placeholder="e.g. Golden Sword">
+        </div>
+
+        <div class="field-group">
+          <label for="loot-value">Loot Value:</label>
+          <input type="number" id="loot-value" min="0" step="0.01" placeholder="e.g. 150.00">
+        </div>
+
+        <div class="field-group">
+          <label for="loot-quantity">Quantity:</label>
+          <input type="number" id="loot-quantity" min="1" step="1" placeholder="e.g. 1">
+        </div>
 
         <p id="loot-error" class="error-msg"></p>
         <button type="button" id="add-loot-btn">Add Loot</button>
       </section>
 
-      <!-- Third Row Left: Loot List -->
+      <!-- Loot List -->
       <section class="panel" id="loot-list-panel">
         <h2>Loot List</h2>
-        <ul id="loot-list">
-          <li class="empty-msg">No loot added yet.</li>
-        </ul>
-        <p id="running-total">Total Loot: $0.00</p>
+
+        <div id="noLootMessage">No loot added.</div>
+
+        <div class="loot-table" id="lootTable">
+          <div class="loot-header">Name</div>
+          <div class="loot-header">Value</div>
+          <div class="loot-header">Quantity</div>
+          <div class="loot-header">Remove</div>
+
+          <div id="lootRows"></div>
+        </div>
+
+        <div class="total-row">
+          Total Loot: $<span id="totalLoot">0.00</span>
+        </div>
       </section>
 
-      <!-- Third Row Right: Split Loot -->
+      <!-- Split Loot -->
       <section class="panel" id="split-loot-panel">
         <h2>Split Loot</h2>
         <button type="button" id="split-loot-btn">Split Loot</button>
+
         <div id="split-results">
-          <p id="split-error" class="error-msg"></p>
           <p id="total-loot-display"></p>
           <p id="per-member-display"></p>
         </div>
       </section>
 
-      <!-- Bottom Row: Logic Explanation -->
+      <!-- Logic Explanation -->
       <section class="panel reflection" id="logic-panel">
         <h2>Logic Explanation</h2>
         <p>
-          In this app, I used an array called lootItems to store all the loot
-          that gets added during the game. I declared it at the top of my script.js
-          file, outside of any functions, so that it doesn't reset every time a
-          button is clicked.
+          In Phase 2, my loot array is the single source of truth for the app.
+          Every loot object now also stores a quantity, so the total value for
+          each item is calculated as value times quantity instead of just value
+          alone. I added quantity because real loot often comes in stacks, like
+          7 daggers instead of just 1, and the totals need to reflect that.
         </p>
         <p>
-          When the user clicks Add Loot, my addLoot() function checks that the
-          name isn't empty and that the value is a real number and not negative.
-          If everything looks good, it creates an object with a name and value
-          and pushes it into the array. Then renderLoot() runs a for loop to
-          go through the whole array and display each item on the page, adding
-          up the total as it goes.
+          All calculations and rendering now happen inside one function called
+          updateUI(). This function recalculates the total loot using a for loop,
+          rebuilds the loot list rows in the DOM, calculates the per member split,
+          and decides whether the Split button should be enabled or disabled. No
+          other part of my code performs calculations on its own. addLoot() and
+          removeLoot() only change the array and then call updateUI() so the
+          screen always matches the array.
         </p>
         <p>
-          When the user clicks Split Loot, my splitLoot() function checks that
-          a party size was entered and that there is actually loot in the array.
-          If both are true, it loops through the array again to get the total,
-          then divides it by the number of party members and shows both the
-          total and each member's share on the page.
+          State controls what is visible. If the loot array is empty, the
+          "No loot added" message shows and the totals and results are hidden
+          using a CSS hidden class. If the party size is invalid or there is no
+          loot, the Split button is disabled using the disabled attribute.
+          Conditional logic inside addLoot() prevents empty names, invalid
+          values, negative values, and invalid quantities from ever entering
+          the array, which protects the state before anything is calculated.
         </p>
       </section>
 

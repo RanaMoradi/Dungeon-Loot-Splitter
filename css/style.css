@@ -62,21 +62,29 @@ main {
 }
 
 /* =====================
-   Form Elements
+   Form Elements - Structured Vertical Alignment
    ===================== */
+
+/* Each label+input pair is grouped as one visual unit */
+.field-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 16px;
+}
+
 label {
     display: block;
-    margin-bottom: 4px;
+    margin-bottom: 6px;
     font-size: 0.9em;
     color: #444444;
+    font-weight: 600;
 }
 
 input[type="text"],
 input[type="number"] {
     display: block;
     width: 100%;
-    padding: 8px 10px;
-    margin-bottom: 14px;
+    padding: 10px;
     background-color: #f0faf5;
     border: 1px solid #98e8c1;
     border-radius: 4px;
@@ -89,13 +97,22 @@ input[type="number"]:focus {
     outline: 2px solid #fdd835;
 }
 
+/* Party Setup uses the same stacked pattern even though it's a single field */
+#party-setup-panel label {
+    margin-bottom: 6px;
+}
+
+#party-setup-panel input {
+    margin-bottom: 0;
+}
+
 /* =====================
    Buttons
    ===================== */
 button {
     display: block;
     width: 100%;
-    padding: 10px;
+    padding: 12px;
     background-color: #98e8c1;
     color: #1a4a35;
     border: none;
@@ -105,10 +122,10 @@ button {
     cursor: pointer;
     text-transform: uppercase;
     letter-spacing: 1px;
-    margin-top: 6px;
+    margin-top: 8px;
 }
 
-button:hover {
+button:hover:not(:disabled) {
     background-color: #fdd835;
     color: #1a1a1a;
 }
@@ -117,38 +134,71 @@ button:focus {
     outline: 2px solid #1a7a4a;
 }
 
+/* Disabled state for action gating */
+button:disabled {
+    background-color: #d8d8d8;
+    color: #888888;
+    cursor: not-allowed;
+}
+
+/* The Add Loot button is a separate action element, given extra top spacing */
+#add-loot-btn {
+    margin-top: 8px;
+}
+
 /* =====================
-   Loot List
+   Loot Table (structured columns, given by spec)
    ===================== */
-#loot-list {
-    list-style: none;
-    padding: 0;
-    margin: 0 0 16px 0;
-}
-
-#loot-list li {
-    padding: 8px 10px;
-    border-bottom: 1px solid #c8f5e0;
-    font-size: 0.95em;
-    display: flex;
-    justify-content: space-between;
-    color: #1a1a1a;
-}
-
-#loot-list li:last-child {
-    border-bottom: none;
-}
-
-.empty-msg {
+#noLootMessage {
     color: #888888;
     font-style: italic;
+    margin-bottom: 12px;
+}
+
+#lootRows {
+    display: contents;
+}
+
+.loot-table {
+    display: grid;
+    grid-template-columns: 3fr 1fr 1fr 1fr;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.loot-header {
+    font-weight: 600;
+    color: #1a7a4a;
+    border-bottom: 2px solid #fdd835;
+    padding-bottom: 0.25rem;
+}
+
+.loot-row {
+    display: contents;
+}
+
+.loot-cell {
+    padding: 0.25rem 0;
+}
+
+.loot-cell button {
+    width: 100%;
+    margin-top: 0;
+    background-color: #ffe082;
+    color: #1a1a1a;
+    font-size: 0.85em;
+    padding: 6px;
+}
+
+.loot-cell button:hover {
+    background-color: #fdd835;
 }
 
 /* =====================
-   Running Total
+   Total Row
    ===================== */
-#running-total {
-    margin: 0;
+.total-row {
+    margin-top: 16px;
     font-weight: bold;
     color: #1a7a4a;
     font-size: 1em;
@@ -157,15 +207,18 @@ button:focus {
 }
 
 /* =====================
-   Split Results
+   Split Results - evenly spaced, no crowding
    ===================== */
 #split-results {
-    margin-top: 16px;
+    margin-top: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
 
 #total-loot-display,
 #per-member-display {
-    margin: 6px 0;
+    margin: 0;
     font-size: 1em;
     font-weight: bold;
     color: #1a1a1a;
@@ -174,6 +227,13 @@ button:focus {
 #per-member-display {
     color: #1a7a4a;
     font-size: 1.1em;
+}
+
+/* =====================
+   Hidden Class Pattern (state-driven visibility)
+   ===================== */
+.hidden {
+    display: none;
 }
 
 /* =====================
@@ -196,10 +256,6 @@ button:focus {
     margin-bottom: 10px;
 }
 
-.reflection strong {
-    color: #1a7a4a;
-}
-
 /* =====================
    Desktop Grid (768px+)
    ===================== */
@@ -218,4 +274,7 @@ button:focus {
     .reflection {
         grid-column: span 2;
     }
+
+    /* Add Loot panel must STAY vertical at all breakpoints,
+       per spec - we do not change .field-group layout here */
 }
